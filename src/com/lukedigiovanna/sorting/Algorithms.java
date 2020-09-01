@@ -8,6 +8,7 @@ public class Algorithms {
 	public static Algorithm
 		SELECTION = new Selection(),
 		INSERTION = new Insertion(),
+		BUBBLE = new Bubble(),
 		MERGE = new Merge(),
 		QUICK_SORT = new QuickSort(),
 		COUNT = new CountSort(),

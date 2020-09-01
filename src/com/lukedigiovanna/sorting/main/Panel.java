@@ -1,6 +1,11 @@
 package com.lukedigiovanna.sorting.main;
 
 import javax.imageio.ImageIO;
+import javax.sound.midi.MidiChannel;
+import javax.sound.midi.MidiSystem;
+import javax.sound.midi.Receiver;
+import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Synthesizer;
 import javax.swing.*;
 
 import com.lukedigiovanna.sorting.*;
@@ -31,7 +36,7 @@ public class Panel extends JPanel {
 	private JSlider speedSlider, arraySlider;
 	
 	private static final String[] 
-			algorithms = new String[] {"Selection", "Insertion", "Merge", "Quick Sort", "Count", "Radix LSD (Count)", "Radix MSD (Count)"},
+			algorithms = new String[] {"Selection", "Insertion", "Bubble", "Merge", "Quick Sort", "Count", "Radix LSD (Count)", "Radix MSD (Count)"},
 			visualizers = new String[] {"Bar Chart", "Color Circle"},
 			colorPalettes = new String[] {"Rainbow", "White", "Gray", "RGB", "CYP"};
 	
@@ -39,6 +44,15 @@ public class Panel extends JPanel {
 		screen = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		
 		this.setLayout(null);
+		
+		try {
+			Synthesizer synth = MidiSystem.getSynthesizer();
+		    MidiChannel chan[] = synth.getChannels(); 
+		    // Check for null; maybe not all 16 channels exist.
+		    if (chan[4] != null) {
+		         chan[4].noteOn(60, 93); 
+		    }
+			} catch (Exception e) {}
 		
 		Font font = new Font("Courier", Font.BOLD, 10);
 		algorithmSelection = new JComboBox(algorithms);
@@ -140,6 +154,9 @@ public class Panel extends JPanel {
 					break;
 				case "Insertion":
 					algorithm = Algorithms.INSERTION;
+					break;
+				case "Bubble":
+					algorithm = Algorithms.BUBBLE;
 					break;
 				case "Merge":
 					algorithm = Algorithms.MERGE;

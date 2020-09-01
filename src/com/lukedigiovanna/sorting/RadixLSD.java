@@ -11,16 +11,16 @@ public class RadixLSD implements Algorithm {
 	}
 	
 	private void countSort(Array array, int exp) {
-		int[] index = new int[10];
+		int[] index = new int[BASE];
 		for (int i = 0; i < array.size(); i++) 
-			index[array.get(i)%exp/(exp/10)]++;
+			index[array.get(i)%exp/(exp/BASE)]++;
 		for (int i = 1; i < index.length; i++)
 			index[i] += index[i-1];
 		
 		int[] output = new int[array.size()];
 		for (int i = array.size() - 1; i >= 0; i--) {
 			int num = array.get(i);
-			int ind = num%exp/(exp/10);
+			int ind = num%exp/(exp/BASE);
 			output[index[ind]-1] = num;
 			index[ind]--;
 		}
@@ -29,15 +29,17 @@ public class RadixLSD implements Algorithm {
 			array.set(i, output[i]);
 	}
 	
+	private final int BASE = 4;
+	
 	@Override
 	public void sort(Array array) {
 		int max = max(array.get());
 		
-		int exp = 10;
+		int exp = BASE;
 		while (max > 0) {
 			countSort(array, exp);
-			max /= 10;
-			exp *= 10;
+			max /= BASE;
+			exp *= BASE;
 		}
 	}
 
