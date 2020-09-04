@@ -7,8 +7,12 @@ package com.lukedigiovanna.sorting;
 public class Algorithms {
 	public static Algorithm
 		SELECTION = new Selection(),
+		HEAP = new Heap(),
 		INSERTION = new Insertion(),
+		SHELL = new Shell(),
 		BUBBLE = new Bubble(),
+		COCKTAIL_SHAKER = new CocktailShaker(),
+		COMB = new Comb(),
 		MERGE = new Merge(),
 		QUICK_SORT = new QuickSort(),
 		COUNT = new CountSort(),

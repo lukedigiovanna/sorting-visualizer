@@ -9,6 +9,7 @@ import javax.sound.midi.Synthesizer;
 import javax.swing.*;
 
 import com.lukedigiovanna.sorting.*;
+import com.lukedigiovanna.sorting.audibilization.SoundPlayer;
 import com.lukedigiovanna.sorting.graphics.BarChart;
 import com.lukedigiovanna.sorting.graphics.ColorLoop;
 import com.lukedigiovanna.sorting.graphics.Visualizer;
@@ -28,16 +29,17 @@ public class Panel extends JPanel {
 	
 	private Array array;
 	
-	private JLabel title;
-	private JLabel accessesLabel, comparisonsLabel;
+	private JLabel infoLabel;
 	private JComboBox algorithmSelection, visualizerSelection, colorSelection;
 	private JButton shuffleButton;
+	private JCheckBox startReversed, audibilize; 
+	private JLabel reversedLabel, audibilizeLabel;
 	private JLabel sliderLabel, arraySizeLabel;
 	private JSlider speedSlider, arraySlider;
 	
 	private static final String[] 
-			algorithms = new String[] {"Selection", "Insertion", "Bubble", "Merge", "Quick Sort", "Count", "Radix LSD (Count)", "Radix MSD (Count)"},
-			visualizers = new String[] {"Bar Chart", "Color Circle"},
+			algorithms = new String[] {"Selection", "Heap", "Insertion", "Shell", "Bubble", "Comb", "Cocktail Shaker", "Merge", "Quick Sort", "Count", "Radix LSD (Count)", "Radix MSD (Count)"},
+			visualizers = new String[] {"Bar Chart", "Scatter Plot", "Color Circle", "Disparity Circle", "Disparity Dots", "Dot Spiral"},
 			colorPalettes = new String[] {"Rainbow", "White", "Gray", "RGB", "CYP"};
 	
 	public Panel() {
@@ -70,26 +72,46 @@ public class Panel extends JPanel {
 		colorSelection.setFont(font);
 		add(colorSelection);
 		
-		accessesLabel = new JLabel("Array Accesses: 0");
-		comparisonsLabel = new JLabel("Comparisons: 0");
-		accessesLabel.setBounds(320, 5, 150, 20);
-		comparisonsLabel.setBounds(475, 5, 150, 20);
-		accessesLabel.setFont(font);
-		comparisonsLabel.setFont(font);
-		accessesLabel.setForeground(Color.WHITE);
-		comparisonsLabel.setForeground(Color.WHITE);
-		add(accessesLabel);
-		add(comparisonsLabel);
+		infoLabel = new JLabel("Array Accesses: 0 Comparisons: 0 Array Size: 1000");
+		infoLabel.setBounds(320, 5, 500, 20);
+		infoLabel.setFont(font);;
+		infoLabel.setForeground(Color.WHITE);
+		add(infoLabel);
 		
 		shuffleButton = new JButton("Run Algorithm");
 		shuffleButton.setBounds(5, 30, 120, 20);
 		shuffleButton.setFont(font);
 		shuffleButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				runAlgorithm();
+				if (shuffleButton.getText().equals("Run Algorithm"))
+					runAlgorithm();
+				else
+					cancelAlgorithm();
 			}
 		});
 		add(shuffleButton);
+		
+		startReversed = new JCheckBox();
+		startReversed.setBounds(130, 30, 20, 20);
+		startReversed.setBackground(new Color(0,0,0,0));
+		add(startReversed);
+		
+		reversedLabel = new JLabel("Start Reversed?");
+		reversedLabel.setBounds(155, 30, 100, 20);
+		reversedLabel.setFont(font);
+		reversedLabel.setForeground(Color.WHITE);
+		add(reversedLabel);
+		
+		audibilize = new JCheckBox("",true);
+		audibilize.setBounds(260, 30, 20, 20);
+		audibilize.setBackground(new Color(0,0,0,0));
+		add(audibilize);
+		
+		audibilizeLabel = new JLabel("Audibilize?");
+		audibilizeLabel.setBounds(285, 30, 150, 20);
+		audibilizeLabel.setFont(font);
+		audibilizeLabel.setForeground(Color.WHITE);
+		add(audibilizeLabel);
 		
 		sliderLabel = new JLabel("Sort Speed: ");
 		sliderLabel.setFont(font);
@@ -108,7 +130,7 @@ public class Panel extends JPanel {
 		arraySizeLabel.setForeground(Color.WHITE);
 		add(arraySizeLabel);
 		
-		arraySlider = new JSlider(10, 1000, 500);
+		arraySlider = new JSlider(50, 2000, 1000);
 		arraySlider.setBounds(80, 82, 100, 20);
 		arraySlider.setBackground(new Color(0,0,0,0));
 		add(arraySlider);
@@ -120,15 +142,16 @@ public class Panel extends JPanel {
 				while (true) {
 					int speedValue = speedSlider.getValue();
 					double speedPercent = speedValue/100.0;
-					double delay = (-0.005 * Math.log(speedPercent) + 0.0001);
+					double delay = (-0.005 * Math.log(speedPercent) + 0.00005);
 					array.setDelay(delay);
 					
 					if (array.size() != arraySlider.getValue()) {
 						array = new Array(arraySlider.getValue());
 					}
 					
-					accessesLabel.setText("Array Accesses: "+array.getAccesses());
-					comparisonsLabel.setText("Comparisons: "+array.getComparisons());
+					SoundPlayer.setEnabled(audibilize.isSelected());
+					
+					infoLabel.setText("Array Accesses: "+array.getAccesses()+" Comparisons: "+array.getComparisons()+" Array Size: "+array.size());
 					
 					draw();
 					try {
@@ -143,20 +166,36 @@ public class Panel extends JPanel {
 	}
 	
 	private boolean runningAlgorithm = false;
+	Thread algorithmThread;
 	private void runAlgorithm() {
-		array.shuffle();
-		Thread t = new Thread(new Runnable() {
+		algorithmThread = new Thread(new Runnable() {
 			public void run() {
+				if (startReversed.isSelected())
+					array.reverse();
+				else
+					array.shuffle();
 				Algorithm algorithm = null;
 				switch (algorithmSelection.getSelectedItem().toString()) {
 				case "Selection":
 					algorithm = Algorithms.SELECTION;
 					break;
+				case "Heap":
+					algorithm = Algorithms.HEAP;
+					break;
 				case "Insertion":
 					algorithm = Algorithms.INSERTION;
 					break;
+				case "Shell":
+					algorithm = Algorithms.SHELL;
+					break;
 				case "Bubble":
 					algorithm = Algorithms.BUBBLE;
+					break;
+				case "Comb":
+					algorithm = Algorithms.COMB;
+					break;
+				case "Cocktail Shaker":
+					algorithm = Algorithms.COCKTAIL_SHAKER;
 					break;
 				case "Merge":
 					algorithm = Algorithms.MERGE;
@@ -175,8 +214,7 @@ public class Panel extends JPanel {
 					break;
 				}
 				
-				shuffleButton.setEnabled(false);
-				shuffleButton.setText("running...");
+				shuffleButton.setText("Cancel");
 				algorithmSelection.setEnabled(false);
 				arraySlider.setEnabled(false);
 				runningAlgorithm = true;
@@ -185,14 +223,24 @@ public class Panel extends JPanel {
 				
 				algorithm.sort(array);
 				
-				shuffleButton.setEnabled(true);
+				array.test();
+				
 				shuffleButton.setText("Run Algorithm");
 				algorithmSelection.setEnabled(true);
 				arraySlider.setEnabled(true);
 				runningAlgorithm = false;
 			}
 		});
-		t.start();
+		algorithmThread.start();
+	}
+	
+	public void cancelAlgorithm() {
+		algorithmThread.stop(); // although this is deprecated, this is a small application, so hopefully it won't cause too many problems
+		
+		shuffleButton.setText("Run Algorithm");
+		algorithmSelection.setEnabled(true);
+		arraySlider.setEnabled(true);
+		runningAlgorithm = false;
 	}
 	
 	int index = 0;
@@ -226,15 +274,26 @@ public class Panel extends JPanel {
 		case "Bar Chart":
 			visualizer = Visualizers.BAR_CHART;
 			break;
+		case "Scatter Plot":
+			visualizer = Visualizers.SCATTER_PLOT;
+			break;
 		case "Color Circle":
 			visualizer = Visualizers.COLOR_CIRCLE;
 			break;
+		case "Disparity Circle":
+			visualizer = Visualizers.DISPARITY_CIRCLE;
+			break;
+		case "Disparity Dots":
+			visualizer = Visualizers.DISPARITY_DOTS;
+			break;
+		case "Dot Spiral":
+			visualizer = Visualizers.DOT_SPIRAL;
 		}
 		visualizer.draw(screen, array, loop);
 		if (this.runningAlgorithm) {
 		try {
 		    // retrieve image
-		    File outputfile = new File("merge/"+index+".png");
+		    File outputfile = new File("latest_sort/"+index+".png");
 		    index++;
 		    ImageIO.write(screen, "png", outputfile);
 		} catch (IOException e) {

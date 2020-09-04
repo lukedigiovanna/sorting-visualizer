@@ -22,6 +22,16 @@ public class GraphicsUtils {
 		Color c = GraphicsUtils.loop(loop.loop, percentValue);
 		if (array.isMostRecentAccess(index)) 
 			c = loop.access;
+		if (array.isSorted(index))
+			c = Color.GREEN;
 		return c;
+	}
+	
+	public static double percentOff(Array array, int index) {
+		int maxSeparation = array.size() - index;
+		if (maxSeparation < array.size() / 2) 
+			maxSeparation = array.size() - maxSeparation;
+		double offPercent = 1.0-(double)Math.abs(array.get()[index] - index)/maxSeparation;
+		return offPercent;
 	}
 }

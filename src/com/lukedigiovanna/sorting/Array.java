@@ -3,6 +3,8 @@ package com.lukedigiovanna.sorting;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lukedigiovanna.sorting.audibilization.SoundPlayer;
+
 public class Array {
 	private int[] array;
 	
@@ -21,6 +23,26 @@ public class Array {
 		this.array = arr;
 	}
 	
+	public void test() {
+		for (int i = 0; i < array.length-1; i++) {
+			SoundPlayer.play(this, i);
+			sleep(1.0/this.size());
+			if (array[i] < array[i+1])
+				addSorted(i);
+		}
+		sleep(1);
+		sorted.clear();
+		SoundPlayer.halt();
+	}
+	
+	public void reverse() {
+		for (int i = 0; i < array.length; i++) {
+			sleep(1.0/this.size());
+			array[i] = array.length - i;
+			SoundPlayer.play(this, i);
+		}
+	}
+	
 	public void setDelay(double delay) {
 		this.delay = delay;
 	}
@@ -32,9 +54,20 @@ public class Array {
 	private List<Integer> mostRecentAccesses = new ArrayList<Integer>();
 	
 	private void addAccess(int index) {
+		SoundPlayer.play(this, index);
 		mostRecentAccesses.add(0, index);
 		if (mostRecentAccesses.size() > 3)
 			mostRecentAccesses.remove(3);
+	}
+	
+	private List<Integer> sorted = new ArrayList<Integer>();
+	
+	private void addSorted(int index) {
+		sorted.add(index);
+	}
+	
+	public boolean isSorted(int index) {
+		return sorted.contains(index);
 	}
 	
 	public int get(int index) {
@@ -51,6 +84,7 @@ public class Array {
 	public void set(int index, int value) {
 		sleep(delay * 0.5);
 		this.array[index] = value;
+		SoundPlayer.play(this, index);
 	}
 	
 	public int size() {
@@ -66,10 +100,13 @@ public class Array {
 	
 	public void shuffle() {
 		for (int i = 0; i < array.length * 2; i++) {
+			sleep(1.0/this.size());
 			int i1 =(int)(Math.random() * array.length), i2 = (int)(Math.random() * array.length);
 			int temp = array[i1];
 			array[i1] = array[i2];
 			array[i2] = temp;
+			SoundPlayer.play(this, i1);
+			SoundPlayer.play(this, i2);
 		}
 	}
 	
