@@ -17,5 +17,6 @@ public class Algorithms {
 		QUICK_SORT = new QuickSort(),
 		COUNT = new CountSort(),
 		RADIX_LSD = new RadixLSD(),
-		RADIX_MSD = new RadixMSD();
+		RADIX_MSD = new RadixMSD(),
+		BOGO = new BogoSort();
 }

@@ -38,7 +38,7 @@ public class Panel extends JPanel {
 	private JSlider speedSlider, arraySlider;
 	
 	private static final String[] 
-			algorithms = new String[] {"Selection", "Heap", "Insertion", "Shell", "Bubble", "Comb", "Cocktail Shaker", "Merge", "Quick Sort", "Count", "Radix LSD (Count)", "Radix MSD (Count)"},
+			algorithms = new String[] {"Selection", "Heap", "Insertion", "Shell", "Bubble", "Comb", "Cocktail Shaker", "Merge", "Quick Sort", "Count", "Radix LSD (Count)", "Radix MSD (Count)", "Bogo"},
 			visualizers = new String[] {"Bar Chart", "Scatter Plot", "Color Circle", "Disparity Circle", "Disparity Dots", "Dot Spiral"},
 			colorPalettes = new String[] {"Rainbow", "White", "Gray", "RGB", "CYP"};
 	
@@ -130,7 +130,7 @@ public class Panel extends JPanel {
 		arraySizeLabel.setForeground(Color.WHITE);
 		add(arraySizeLabel);
 		
-		arraySlider = new JSlider(50, 2000, 1000);
+		arraySlider = new JSlider(5, 2000, 1000);
 		arraySlider.setBounds(80, 82, 100, 20);
 		arraySlider.setBackground(new Color(0,0,0,0));
 		add(arraySlider);
@@ -212,6 +212,8 @@ public class Panel extends JPanel {
 				case "Radix MSD (Count)":
 					algorithm = Algorithms.RADIX_MSD;
 					break;
+				case "Bogo":
+					algorithm = Algorithms.BOGO;
 				}
 				
 				shuffleButton.setText("Cancel");
