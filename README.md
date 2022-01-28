@@ -1,5 +1,8 @@
 # Sorting Visualizer and Audibilizer
 
+You must have Java downloaded for this application to run
+Download: [jar file](https://lukedigi.com/projects/sorting/Sorting%20Visualizer.jar)
+
 ## What's sorting?
 Sorting is a common problem while programming, especially when working with data and can be necessary for efficient searching algorithms (such as binary search). When we sort, we arrange a list of comparable type from least to greatest. Comparable data includes not only numbers but possibly other data (perhaps alphabetical order of words). There are many algorithms we can use to sort lists of data. For smaller sets of a data, very crude approaches are generally ok to implement. These algorithms include selection and insertion sort and make many comparisons between elements of the data, which cause the algorithm to take a long time to run, especially for larger sets of data.
 
@@ -15,6 +18,6 @@ The algorithm to use for a particular problem that requires sorting often depend
 This program visualizes several sorting algorithms using different visualization techniques such as a bar chart or color circle. These algorithms are slowed down by orders of magnitude to show the individual array accesses and number comparisons, but are much quicker when used practically. When a bar turns red, that means it has been recently accessed or compared by the algorithm. The algorithms are also "audibilized", meaning that each time an element is accessed or compared, a pitch is played corresponding to that elements value (high value - high pitch and vice versa). We can get some pretty cool looking and sounding algorithms out of this!
 
 ### Heap Sort
-![head sort](https://youtu.be/xgHGcsPthPM)
+[![head sort]()](https://i.ibb.co/Qc97MvK/sorting1.gif)
 
 ### 
