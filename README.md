@@ -1,6 +1,7 @@
 # Sorting Visualizer and Audibilizer
 
 You must have Java downloaded for this application to run
+
 Download: [jar file](https://lukedigi.com/projects/sorting/Sorting%20Visualizer.jar)
 
 ## What's sorting?
